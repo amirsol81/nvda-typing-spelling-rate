@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Typing &amp; Spelling Rate - NVDA Add-on</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; line-height: 1.5; margin: 1.2em; }
+    h1 { margin-top: 0; }
+    code { background: #f2f2f2; padding: 0.1em 0.25em; border-radius: 3px; }
+    .meta { margin: 0 0 1em 0; }
+    ul { margin-top: 0.25em; }
+  </style>
+</head>
+<body>
+  <h1>Typing &amp; Spelling Rate</h1>
+  <p class="meta">
+    <strong>Author:</strong> Amir Soleimani<br>
+    <strong>NVDA compatibility:</strong> 2026.1 and later
+  </p>
+
+  <h2>What this add-on does</h2>
+  <p>
+    This add-on lets you set a faster (or slower) speech rate specifically for:
+  </p>
+  <ul>
+    <li><strong>Typing echo</strong> (characters and words), and</li>
+    <li><strong>Spelling</strong> (spelling output spoken by NVDA).</li>
+  </ul>
+  <p>
+    These rates are independent from your normal synthesizer rate. Your main speech rate is not changed.
+  </p>
+
+  <h2>Why this add-on exists</h2>
+  <p>
+    Many users prefer a comfortable speech rate for general reading and navigation, but want a
+    higher rate for rapid typing feedback or spelling—especially when editing text.
+    NVDA's standard speech rate is global, so changing it affects everything.
+    This add-on provides separate rates so you can keep your normal rate while still getting fast, crisp feedback when you type or spell.
+  </p>
+
+  <h2>How it works (technical note)</h2>
+  <p>
+    NVDA speaks using a sequence of speech commands. This add-on injects a <code>RateCommand</code>
+    into the speech sequence <em>only for the specific typing/spelling utterance</em>.
+    It does <strong>not</strong> change the synthesizer's global rate setting, which helps keep the behavior stable and compatible with other add-ons.
+  </p>
+
+  <h2>Settings</h2>
+  <p>
+    Open NVDA Settings and locate the add-on's settings panel under the <strong>Typing &amp; Spelling Rate</strong> panel.
+  </p>
+
+  <h3>Enable separate typing rate</h3>
+  <p>
+    When checked, the add-on applies your configured typing rate to typing echo output.
+    When unchecked, typing echo uses your normal synthesizer rate.
+  </p>
+
+  <h3>Enable separate spelling rate</h3>
+  <p>
+    When checked, the add-on applies your configured spelling rate to spelling output.
+    When unchecked, spelling uses your normal synthesizer rate.
+  </p>
+
+  <h3>Typing rate</h3>
+  <p>
+    Adjusts the rate used for typing echo (characters and words) when <em>Enable separate typing rate</em> is checked.
+  </p>
+
+  
+  <h3>Also apply to typed words</h3>
+  <p>
+    When checked, the typing rate is applied to both typed <strong>characters</strong> and typed <strong>words</strong>.
+    When unchecked, the typing rate is applied only to typed characters.
+  </p>
+
+<h3>Spelling rate</h3>
+  <p>
+    Adjusts the rate used for spelling output when <em>Enable separate spelling rate</em> is checked.
+  </p>
+
+  <h3>Windows OneCore: Boost</h3>
+  <p>
+    If your synthesizer is <strong>Windows OneCore</strong>, the add-on provides an extra <strong>Boost</strong> option.
+    OneCore can behave differently at high rates, so Boost gives additional headroom without changing NVDA's global rate slider range.
+  </p>
+  <ul>
+    <li><strong>Boost range:</strong> 0–100</li>
+    <li><strong>Boost is only used with Windows OneCore.</strong> It has no effect with other synthesizers.</li>
+  </ul>
+
+  <h3>Test buttons</h3>
+  <p>
+    The panel includes two test buttons:
+  </p>
+  <ul>
+    <li><strong>Test typing</strong>: speaks a short sample using the typing rate settings.</li>
+    <li><strong>Test spelling</strong>: speaks a short sample using the spelling rate settings.</li>
+  </ul>
+  <p>
+    The sample includes both characters and words (for example: <code>A B C, hello world</code>) so you can judge the rate quickly.
+  </p>
+
+  <h2>Notes</h2>
+  <ul>
+    <li>This add-on targets NVDA 2026.1+ (64-bit).</li>
+    <li>Settings are stored per synthesizer, so different synthesizers can have different typing/spelling rates.</li>
+  </ul>
+</body>
+</html>
