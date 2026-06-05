@@ -240,11 +240,11 @@ def _getDefaultSpeechRate() -> int:
 def _computeTypingRateOffset() -> int:
     """Compute offset for typed echo relative to the active synth default rate.
 
-    For OneCore, an additional optional boost is added (0..50) to make changes near the top end
+    For OneCore, an additional optional boost is added (0..100) to make changes near the top end
     more noticeable, while keeping the main typing rate slider consistent (0..100).
     """
     conf = _getConf()
-    if not conf.get("enabledSpelling", conf.get("enabled", True)):
+    if not conf.get("enabled", True):
         return 0
 
     synthName = _getActiveSynthName()
@@ -278,7 +278,7 @@ def _computeTypingRateOffset() -> int:
 def _computeSpellingRateOffset() -> int:
     """Compute offset for spelling relative to the active synth default rate."""
     conf = _getConf()
-    if not conf.get("enabled", True):
+    if not conf.get("enabledSpelling", conf.get("enabled", True)):
         return 0
 
     synthName = _getActiveSynthName()
@@ -330,13 +330,22 @@ def _speakTextWithTypingRate(text: str) -> None:
 def _speakSpellingWithSpellingRate(text: str, *args, **kwargs) -> None:
     """Speak spelling with the configured spelling rate.
 
-    Accepts *args/**kwargs to be resilient to NVDA signature changes.
+    Accepts *args/**kwargs so NVDA spelling variants such as phonetic
+    spelling (for example, useCharacterDescriptions=True) are preserved.
     """
     offset = _computeSpellingRateOffset()
     try:
         seq = list(_speech.getSpellingSpeech(text, *args, **kwargs))
-    except TypeError:
-        seq = list(_speech.getSpellingSpeech(text))
+    except Exception:
+        # Do not silently retry without NVDA's original arguments: doing so can
+        # turn phonetic spelling back into ordinary character spelling on some
+        # NVDA / synth combinations. Fall back to NVDA's original speakSpelling
+        # implementation instead, preserving all arguments.
+        log.error("TypingEchoRate: failed to build spelling speech sequence", exc_info=True)
+        orig = _ORIG_speakSpelling_pkg or _ORIG_speakSpelling_mod
+        if orig is not None:
+            return orig(text, *args, **kwargs)
+        raise
     if offset == 0:
         _speech.speak(seq)
         return
@@ -619,7 +628,7 @@ class TypingEchoRateSettingsPanel(gui.SettingsPanel):
         return offset
 
     def _getSpellingTestOffsetFromUI(self) -> int:
-        if not bool(self.enableCtrl.GetValue()):
+        if not bool(self.enableSpellCtrl.GetValue()):
             return 0
         try:
             spellingRate = int(self.spellRateSlider.GetValue())
